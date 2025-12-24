@@ -153,7 +153,16 @@
         }
 
         // Create snowflakes at intervals
-        setInterval(createSnowflake, 200);
+        let snowInterval = setInterval(createSnowflake, 200);
+        
+        // Pause snow when page is hidden to save resources
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(snowInterval);
+            } else {
+                snowInterval = setInterval(createSnowflake, 200);
+            }
+        });
         
         // Create initial batch of snowflakes
         for (let i = 0; i < 50; i++) {
