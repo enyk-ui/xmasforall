@@ -128,14 +128,14 @@
 
     <script>
         // Falling snow animation
-        const timeouts = [];
+        const timeouts = new Set();
         let snowInterval = null;
+        const snowContainer = document.getElementById('snowContainer');
         
         function createSnowflake() {
-            const snowContainer = document.getElementById('snowContainer');
             const snowflake = document.createElement('div');
             snowflake.className = 'snowflake';
-            snowflake.innerHTML = '❄';
+            snowflake.textContent = '❄';
             
             // Random starting position
             snowflake.style.left = Math.random() * 100 + '%';
@@ -156,8 +156,9 @@
             // Remove snowflake after animation completes
             const timeoutId = setTimeout(() => {
                 snowflake.remove();
+                timeouts.delete(timeoutId);
             }, duration * 1000);
-            timeouts.push(timeoutId);
+            timeouts.add(timeoutId);
         }
 
         // Create snowflakes at regular intervals (reduced frequency for better performance)
