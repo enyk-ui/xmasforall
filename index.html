@@ -128,6 +128,9 @@
 
     <script>
         // Falling snow animation
+        const timeouts = [];
+        let snowInterval = null;
+        
         function createSnowflake() {
             const snowContainer = document.getElementById('snowContainer');
             const snowflake = document.createElement('div');
@@ -151,18 +154,25 @@
             snowContainer.appendChild(snowflake);
             
             // Remove snowflake after animation completes
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 snowflake.remove();
             }, duration * 1000);
+            timeouts.push(timeoutId);
         }
 
-        // Create snowflakes at regular intervals
-        setInterval(createSnowflake, 200);
+        // Create snowflakes at regular intervals (reduced frequency for better performance)
+        snowInterval = setInterval(createSnowflake, 300);
         
-        // Create initial batch of snowflakes
-        for (let i = 0; i < 50; i++) {
+        // Create initial batch of snowflakes (reduced count for better mobile performance)
+        for (let i = 0; i < 30; i++) {
             setTimeout(createSnowflake, i * 100);
         }
+        
+        // Clean up on page unload to prevent memory leaks
+        window.addEventListener('beforeunload', () => {
+            clearInterval(snowInterval);
+            timeouts.forEach(timeoutId => clearTimeout(timeoutId));
+        });
     </script>
 </body>
 </html>
